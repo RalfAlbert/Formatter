@@ -20,36 +20,40 @@
  * $values->key_2 = 'value 2';
  * $format = '>key_1< belongs to key_1, >key_2< belongs to key_2';
  * 
- * Formatter::set_delimiter( '>', '<' );
+ * Formatter::set_delimiter( '<', '>' );
  * $e = Formatter::sprintf( $format, $values );
  * 
  * $values = array(
  * 	'number_one'	=> 3,
  *  'number_two'	=> 5,
  *  );
+ *  
  * $format	 = 'Number One filled to 5 positions: %number_one[05d]%';
  * $format	.= ' and Number Two as hex (upper chars) filled to 6 positions: %number_two[06X]%';
  * Formatter::printf( $format, $values );
  *  
- *  
- *  
+ *    
  * Formatter::printf( string $format, array|object $values );
  * Formatter::sprintf( string $format, array|object $values );
- * Formatter::set_delimiter( char $start_delimiter, char $end_delimiter );
+ * Formatter::set_delimiter( string $start_delimiter, string $end_delimiter );
  * 
  * @author Ralf Albert
- * @version 1.1
+ * @version 1.1.1
  * @see http://php.net/manual/function.sprintf.php
- * 
- *
- * CHANGELOG
- * v1.1
- *  - Add printf/sprintf-formating option
- *  
- * v1.0
- *  - First release
- *  
  */
+ 
+ /*
+  * CHANGELOG
+  * v1.1.1
+  *  - start- and end-delimiter can be changed 
+  *  
+  * v1.1
+  *  - Add printf/sprintf-formating option
+  *  
+  * v1.0
+  *  - First release
+  *  
+  */
 
 class Formatter
 {
@@ -94,7 +98,7 @@ class Formatter
 		foreach( $values as $key => $value ){
 
 			$matches	= array();
-			$search_key	= sprintf( '%%%s%%', $key );
+			$search_key	= sprintf( '%s%s%s', self::$start_delimiter, $key, self::$end_delimiter );
 			$pattern	= sprintf( '/%%%s\[(.*)\]%%/iU', $key );
 
 			// search for the values in format-string. find %key% or %key[format]%
@@ -110,7 +114,7 @@ class Formatter
 
 				foreach( $matches[1] as $match ){
 					$replace = sprintf( '%' . $match, $value );
-					$search = sprintf( '%%%s[%s]%%', $key, $match );
+					$search = sprintf( '%s%s[%s]%s', self::$start_delimiter, $key, $match, self::$end_delimiter );
 					$format = str_replace( $search, $replace, $format );
 				}
 			}
