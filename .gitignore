@@ -1,0 +1,7 @@
+*.project
+*.buildpath
+*.settings
+/.settings
+/.settings/*
+.settings/*
+
